@@ -30,7 +30,7 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string>LemonLee</string>
+	<string>Nigel Smith</string>
 	<key>description</key>
 	<string>Toggle tethering with your iPhone on / off</string>
 	<key>disabled</key>
@@ -79,7 +79,7 @@ echo "&lt;items&gt;"
 
 if [[ -z "$DEVICENAME" ]] 
 then
-	echo "&lt;item uid=\"iphone usb device not found\" arg=\"device-not-found\"&gt;&lt;title&gt;iPhone USB Device not found&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;icon.png&lt;/icon&gt;&lt;/item&gt;"
+	echo "&lt;item uid=\"iphone usb device not found\" arg=\"device-not-found\"&gt;&lt;title&gt;iPhone USB Device not found&lt;/title&gt;&lt;subtitle&gt;Is the iPhone connected?&lt;/subtitle&gt;&lt;icon&gt;icon.png&lt;/icon&gt;&lt;/item&gt;"
 else
 	if [[ $(networksetup -getnetworkserviceenabled "$DEVICENAME" | grep -c "Enabled") == 0 ]]
 	then
@@ -132,6 +132,12 @@ echo "&lt;/items&gt;"
 				<key>script</key>
 				<string>DEVICENAME=$(networksetup -listallhardwareports | grep -Eo "iPhone.*$");
 
+function xsudo() {
+	# this script is unused atm
+	export bar=""
+	for i in "$@"; do export bar="$bar '${i}'";done
+	osascript -e "do shell script \"$bar\" with administrator privileges"
+}
 
 if [[ "{query}" == "off" ]]
 then
@@ -152,7 +158,13 @@ fi</string>
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>Based on wifi toggle by Jonas Eriksen</string>
+	<string>Based on wifi toggle by Jonas Eriksen
+
+v1.1
+Added support for when the iPhone isn't connected
+
+v1.0
+Initial commit</string>
 	<key>uidata</key>
 	<dict>
 		<key>8C7BF020-56EA-4096-B5C0-E44AA2A39F5E</key>
@@ -172,6 +184,6 @@ fi</string>
 		</dict>
 	</dict>
 	<key>webaddress</key>
-	<string></string>
+	<string>https://github.com/lemonlee/alfred-iphone-tether-toggle</string>
 </dict>
 </plist>
