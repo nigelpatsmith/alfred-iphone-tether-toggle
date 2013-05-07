@@ -17,6 +17,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>AA281685-88F5-4EB7-849B-C662013CA477</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>D3EE4A27-D72E-4D0F-8CDA-FD91FA53CC56</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 	</dict>
 	<key>createdby</key>
 	<string>LemonLee</string>
@@ -28,6 +39,29 @@
 	<string>iPhone Tethering Toggle</string>
 	<key>objects</key>
 	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>iPhone Tethering</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>D3EE4A27-D72E-4D0F-8CDA-FD91FA53CC56</string>
+		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -43,30 +77,35 @@
 echo "&lt;?xml version=\"1.0\"?&gt;"
 echo "&lt;items&gt;"
 
-if [[ $(networksetup -getnetworkserviceenabled "$DEVICENAME" | grep -c "Enabled") == 0 ]]
+if [[ -z "$DEVICENAME" ]] 
 then
-	// Turn iPhone USB Tethering On
-	echo "&lt;item uid=\"iphone usb tethering enable\" arg=\"on\"&gt;&lt;title&gt;Turn $DEVICENAME Tethering On&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;icon.png&lt;/icon&gt;&lt;/item&gt;"
-
+	echo "&lt;item uid=\"iphone usb device not found\" arg=\"device-not-found\"&gt;&lt;title&gt;iPhone USB Device not found&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;icon.png&lt;/icon&gt;&lt;/item&gt;"
 else
+	if [[ $(networksetup -getnetworkserviceenabled "$DEVICENAME" | grep -c "Enabled") == 0 ]]
+	then
+		// Turn iPhone USB Tethering On
+		echo "&lt;item uid=\"iphone usb tethering enable\" arg=\"on\"&gt;&lt;title&gt;Turn $DEVICENAME Tethering On&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;icon.png&lt;/icon&gt;&lt;/item&gt;"
 
-	// IPv4
-	IPv4=$(networksetup -getinfo "$DEVICENAME" | grep "IP address" | egrep -o "([0-9]{1,3}\.){3,3}[0-9]{1,3}")
-	if [[ ! -z "$IPv4" ]]
-	then echo "&lt;item uid=\"\" arg=\"$IPv4\"&gt;&lt;title&gt;$IPv4&lt;/title&gt;&lt;subtitle&gt;IPv4 address&lt;/subtitle&gt;&lt;icon&gt;icon.png&lt;/icon&gt;&lt;/item&gt;"
+	else
+
+		// IPv4
+		IPv4=$(networksetup -getinfo "$DEVICENAME" | grep "IP address" | egrep -o "([0-9]{1,3}\.){3,3}[0-9]{1,3}")
+		if [[ ! -z "$IPv4" ]]
+		then echo "&lt;item uid=\"\" arg=\"$IPv4\"&gt;&lt;title&gt;$IPv4&lt;/title&gt;&lt;subtitle&gt;IPv4 address&lt;/subtitle&gt;&lt;icon&gt;icon.png&lt;/icon&gt;&lt;/item&gt;"
+		fi
+
+		// IPv6
+		IPv6=$(networksetup -getinfo "$DEVICENAME" | grep "IPv6 IP address")
+		IPv6=${IPv6:17}
+		if [[ "$IPv6" != "none" ]]
+		then echo "&lt;item uid=\"\" arg=\"$IPv6\"&gt;&lt;title&gt;$IPv6&lt;/title&gt;&lt;subtitle&gt;IPv6 address&lt;/subtitle&gt;&lt;icon&gt;icon.png&lt;/icon&gt;&lt;/item&gt;"
+		fi
+
+
+		// Turn iPhone USB Tethering Off
+		echo "&lt;item uid=\"\" arg=\"off\"&gt;&lt;title&gt;Turn $DEVICENAME Tethering Off&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;icon.png&lt;/icon&gt;&lt;/item&gt;"
+
 	fi
-
-	// IPv6
-	IPv6=$(networksetup -getinfo "$DEVICENAME" | grep "IPv6 IP address")
-	IPv6=${IPv6:17}
-	if [[ "$IPv6" != "none" ]]
-	then echo "&lt;item uid=\"\" arg=\"$IPv6\"&gt;&lt;title&gt;$IPv6&lt;/title&gt;&lt;subtitle&gt;IPv6 address&lt;/subtitle&gt;&lt;icon&gt;icon.png&lt;/icon&gt;&lt;/item&gt;"
-	fi
-
-
-	// Turn iPhone USB Tethering Off
-	echo "&lt;item uid=\"\" arg=\"off\"&gt;&lt;title&gt;Turn $DEVICENAME Tethering Off&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;icon.png&lt;/icon&gt;&lt;/item&gt;"
-
 fi
 
 echo "&lt;/items&gt;"
@@ -122,6 +161,11 @@ fi</string>
 			<real>10</real>
 		</dict>
 		<key>AA281685-88F5-4EB7-849B-C662013CA477</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+		<key>D3EE4A27-D72E-4D0F-8CDA-FD91FA53CC56</key>
 		<dict>
 			<key>ypos</key>
 			<real>10</real>
