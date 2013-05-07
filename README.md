@@ -1,4 +1,4 @@
-alfred-iphone-tether-toggle
+Alfred iPhone tether toggle
 ===========================
 
 Toggle tethering of your iPhone via USB on / off with this alfred workflow. Requires sudo priveleges.
